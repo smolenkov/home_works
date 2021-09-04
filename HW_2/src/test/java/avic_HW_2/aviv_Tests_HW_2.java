@@ -13,44 +13,49 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.By.xpath;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class aviv_Tests_HW_2 {
 
     private WebDriver driver;
 
     @BeforeTest
-    public void profileSetup(){
-        System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe" );
+    public void profileSetup() {
+        System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
     }
 
 
     @BeforeMethod
-    public void testSetup(){
+    public void testSetup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://avic.ua/");
+
     }
 
     @Test(priority = 1)
     public void checkThanMayGoToApplePageFromMainPage() {
-        driver.findElement(xpath("//div[contains(@class, 'open-cat')]//span[@class='sidebar-item']")).click();
-        driver.findElement(xpath("//div[(@class='menu-lvl first-level')]//a[contains(@href, 'apple-store')]")).click();
+        driver.get("https://avic.ua/");
+        waitForElementLocateBy(driver, By.xpath("//div[contains(@class, 'open-cat')]//span[@class='sidebar-item']")).click();
+        waitForElementLocateBy(driver, By.xpath("//div[(@class='menu-lvl first-level')]//a[contains(@href, 'apple-store')]")).click();
         assertTrue(driver.getCurrentUrl().contains("apple-store"));
     }
+
 
     @Test(priority = 2)// страница apple store загружена
     public void checkThanCatalogueOfAppleStoreIsOpened() {
         driver.get("https://avic.ua/apple-store");
-        assertTrue(driver.getPageSource().contains("<h1 class='page-title'>Apple Store</h1>"));
+        waitForElementLocateBy(driver, By.xpath("//h1[(@class='page-title' and text()='Apple Store')]"));
+        assertNotNull(driver.findElement(xpath("//h1[(@class='page-title' and text()='Apple Store')]")));
+
+
     }
 
     @Test(priority = 3)//проверка количества карточек товаров на странице
-    public void checkOfCountOfProductsOnThePage(){
+    public void checkOfCountOfProductsOnThePage() {
         driver.get("https://avic.ua/apple-store");
-        driver.findElement(xpath("//div[(@class='brand-box__title')]//a[(@href= 'https://avic.ua/macbook')]")).click();
-        List<WebElement> elementsList = driver.findElements(xpath("//div[contains(@class,'prod-cart')]//a[(@class= 'prod-cart__buy')"));
+        waitForElementLocateBy(driver, By.xpath("//div[(@class='brand-box__title')]//a[(@href= 'https://avic.ua/macbook')]")).click();
+        List<WebElement> elementsList = driver.findElements(By.xpath("//div[contains(@class,'prod-cart')]//a[(@class= 'prod-cart__buy')]"));
         int actualElementsSize = elementsList.size();
         assertEquals(actualElementsSize, 12);
     }
@@ -58,23 +63,40 @@ public class aviv_Tests_HW_2 {
     @Test(priority = 4)
     public void checkThanYouCanBuyMacbook() {
         driver.get("https://avic.ua/macbook");
-        driver.findElement(xpath("//div[contains(@class,'prod-cart')]//a[(@class= 'prod-cart__buy')][1]")).click();
-        assertTrue(driver.getPageSource().contains("<div class='ttl'>Корзина</div>"));
+        waitForElementLocateBy(driver, By.xpath("//div[contains(@class,'prod-cart')]//a[(@class= 'prod-cart__buy')][1]")).click();
+        assertNotNull(driver.findElement(xpath("//div[(@class='ttl' and text()='Корзина')]")));
 
     }
 
     @Test(priority = 5)
-    public void checkThanProduktIsAddedInCart() {
+    public void checkThanTheProductIsInCart(){
+        driver.get("https://avic.ua/macbook");
         String CountOfProduct;
-        driver.findElement(xpath("//div[(@class='btns-cart-holder')]//a[text()= ' Продолжить покупки']")).click();
-        CountOfProduct = driver.findElement(xpath("//div[(@class='active-cart-item js_cart_count')]")).getText();
+        waitForElementLocateBy(driver, By.xpath("//div[contains(@class,'prod-cart')]//a[(@class= 'prod-cart__buy')][1]")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("js_cart")));
+        waitForElementLocateBy(driver, By.xpath("//div[(@class='btns-cart-holder')]//a[text()= ' Продолжить покупки']")).click();
+        CountOfProduct = waitForElementLocateBy(driver, By.xpath("//div[contains(@class,'header-bottom__cart')]//div[contains(@class,'js_cart_count')]")).getText();
         assertEquals(CountOfProduct, "1");
     }
 
 
+    @AfterMethod
+    public void tearDown() {
+        driver.close();
+    }
 
+    @AfterTest
+    public void quit() {
+        driver.quit();
+    }
 
-    /*
+    private static WebElement waitForElementLocateBy(WebDriver driver, By xpath) {
+        return new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(xpath));
+    }
+
+}
+  /*
 
     //div[contains(@class, 'open-cat')]//span[@class='sidebar-item']  - кнопка каталог товаров
     //div[(@class='menu-lvl first-level')]//a[contains(@href, 'apple-store')] - меню apple store
@@ -93,15 +115,3 @@ public class aviv_Tests_HW_2 {
 
 
 */
-
-    @AfterMethod
-    public void tearDown(){
-        driver.close();
-    }
-
-    @AfterTest
-    public void quit(){
-        driver.quit();
-    }
-
-}
