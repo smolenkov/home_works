@@ -87,6 +87,7 @@ public class aviv_Tests_HW_2 {
     @AfterTest
     public void quit() {
         driver.quit();
+        driver = null;
     }
 
     private static WebElement waitForElementLocateBy(WebDriver driver, By xpath) {
