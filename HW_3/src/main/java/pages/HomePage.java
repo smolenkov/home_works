@@ -12,10 +12,18 @@ public class HomePage extends BasePage{
 
     @FindBy(xpath = "//div[contains(@class, 'open-cat')]//span[@class='sidebar-item']")
     private WebElement catalogButton;
-    private static final String APPLE_STORE_BUTTON ="//div[(@class='menu-lvl first-level')]//a[contains(@href, 'apple-store')]";
-    private static final String COUNT_OF_PRODUCT_IN_CART = "//div[contains(@class,'header-bottom__cart')]//div[contains(@class,'js_cart_count')]";
-    private static final String SEARCH_INPUT = "//input[@id='input_search']";
-    private static final String SEARCH_BUTTON = "//button[@class='button-reset search-btn']";
+
+    @FindBy(xpath = "//div[(@class='menu-lvl first-level')]//a[contains(@href, 'apple-store')]")
+    private WebElement applestoreButton;
+
+    @FindBy(xpath = "//div[contains(@class,'header-bottom__cart')]//div[contains(@class,'js_cart_count')]")
+    private WebElement countOfProductInCart;
+
+    @FindBy(xpath = "//input[@id='input_search']")
+    private WebElement searchInput;
+
+    @FindBy(xpath = "//button[@class='button-reset search-btn']")
+    private WebElement searchButton;
 
 
     public HomePage(WebDriver driver) {
@@ -23,17 +31,17 @@ public class HomePage extends BasePage{
     }
 
     public void clickAppleStoreButton(){
-        driver.findElement(By.xpath(APPLE_STORE_BUTTON)).click();
+        applestoreButton.click();
     }
 
     public void clickCatalogButton(){ catalogButton.click(); }
 
-    public String getTextFromCartsCount(){return driver.findElement(By.xpath(COUNT_OF_PRODUCT_IN_CART)).getText();}
+    public String getTextFromCartsCount(){return countOfProductInCart.getText();}
 
 
     public void searchByKeyword(final String keyword) {
-        driver.findElement(xpath(SEARCH_INPUT)).sendKeys(keyword);
-        driver.findElement(xpath(SEARCH_BUTTON)).click();
+        searchInput.sendKeys(keyword);
+        searchButton.click();
     }
 
 }

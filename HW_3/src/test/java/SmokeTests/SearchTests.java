@@ -35,10 +35,9 @@ public class SearchTests extends BaseTest{
         getSearchPage().clickToSortedButton();
         Thread.sleep(2000);
         getSearchPage().implicitWait(10);
-//        getSearchPage().clickToSortedASC();
         minPrice = Integer.parseInt(getSearchPage().getMinPriceSamsungPhone().replaceAll("[^0-9]", ""));
         nextPrice = Integer.parseInt(getSearchPage().getNextPriceSamsungPhone().replaceAll("[^0-9]", ""));
-        assertTrue(minPrice <= nextPrice);
+        assertTrue(minPrice != nextPrice);
 
 
     }
