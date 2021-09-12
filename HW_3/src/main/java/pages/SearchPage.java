@@ -20,6 +20,13 @@ public class SearchPage extends BasePage{
     @FindBy(xpath = "(//span[contains(@id, 'select2-sort')])[2]")
     private WebElement sortedButton;
 
+    @FindBy(xpath ="//li[contains(@id , 'select2-sort') and contains(@id , 'priceasc')]")
+    private WebElement sortedASC;
+//   //ul[@class='select2-results__options']/li[2]
+//   //li[contains(@id , 'select2-sort') and contains(@id , 'priceasc')]
+    @FindBy(xpath = "ul[@class='select2-results__options']/li[2]")
+    private List <WebElement> sortedASCList;
+
     @FindBy(xpath = "//div/input[@type='checkbox' and @value='725']")
     private WebElement checkBoxSmartphone;
 
@@ -52,8 +59,32 @@ public class SearchPage extends BasePage{
     public void clickCheckBoxAvailable(){WebElement element = checkBoxAvailable;
         ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}
 
-        public void clickToSortedButton(){WebElement element = sortedButton;
-        ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}
+//        public void clickToSortedButton(){WebElement element = sortedButton;
+//        ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}
+
+//            public void clickToSortedASC(){WebElement element = sortedASC;
+//        ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}
+
+//    public void clickToSortedASC (){
+//        WebElement element = sortedASC;
+//        (new WebDriverWait(driver, 10)).until(ExpectedConditions
+//                .visibilityOfElementLocated(By.xpath("WebElement element = sortedASC;")));
+//        ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}
+
+    public void clickToSortedASC(){ sortedASC.click(); }
+
+    public void clickToSortedButton () throws InterruptedException {
+        int i=sortedASCList.size();
+        while (i != 0)
+        {sortedButton.click();
+        i=sortedASCList.size(); }
+        Thread.sleep(500);
+        sortedButton.click();
+
+    }
+
+//        {WebElement element = sortedButton;
+//            ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}}
 
 
 
