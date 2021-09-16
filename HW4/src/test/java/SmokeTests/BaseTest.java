@@ -1,44 +1,50 @@
 package SmokeTests;
-//
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.annotations.*;
 import pages.AppleStorePage;
 import pages.HomePage;
 import pages.MacbookPage;
 import pages.SearchPage;
+import utils.CapabilityFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 
 public class BaseTest {
-    WebDriver driver;
-    private static final String AVIC_URL = "https://avic.ua/";
+    protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<>();// ThreadLocal позволяет нам хранить данные, которые будут доступны только конкретным потоком. Каждый поток будет иметь свой собственный экземпляр ThreadLocal
+    private CapabilityFactory capabilityFactory = new CapabilityFactory();
+    private static final String ALLO_URL = "https://allo.ua/";
 
-    @BeforeTest
-    public void profileSetup() {
-        chromedriver().setup();
-    }
 
     @BeforeMethod
-    public void testSetup() {
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get(AVIC_URL);
+    @Parameters(value = {"browser"})
+    public void setUp(@Optional("firefox") String browser) throws MalformedURLException {
+        driver.set(new RemoteWebDriver(new URL("http://192.168.56.1:4444/wd/hub"), capabilityFactory.getCapabilities(browser)));
+        getDriver().manage().window().maximize();
+        getDriver().get(ALLO_URL);
     }
 
     @AfterMethod
-    public void tearDown() { driver.close();}
+    public void tearDown() {
+        getDriver().close();
+    }
 
-    public WebDriver getDriver() {return driver;}
+    @AfterClass
+    void terminate() {
+        driver.remove();
+    }
 
-    public HomePage getHomePage() {return new HomePage(getDriver());}
+    public WebDriver getDriver() {
+        return driver.get();
+    }
 
-    public AppleStorePage getAppleStorePage() {return new AppleStorePage(getDriver());}
-
-    public MacbookPage getMacbookPage() {return new MacbookPage(getDriver());}
+    public HomePage getHomePage() {
+        return new HomePage(getDriver());
+    }
 
     public SearchPage getSearchPage() {return new SearchPage(getDriver());}
 
