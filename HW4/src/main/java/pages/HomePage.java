@@ -1,12 +1,9 @@
 package pages;
-//
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import static org.openqa.selenium.By.xpath;
 
 public class HomePage extends BasePage{
 
@@ -15,12 +12,6 @@ public class HomePage extends BasePage{
 
     @FindBy(xpath = "//button[contains(@class,'search-form__submit-button')]")
     private WebElement searchButton;
-
-
-
-
-
-
 
     public HomePage(WebDriver driver) {
         super(driver);

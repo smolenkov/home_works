@@ -1,11 +1,8 @@
 package pages;
-//
-
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
-
 import java.util.List;
 
 
@@ -27,6 +24,18 @@ public class SearchPage extends BasePage{
     @FindBy(xpath = "//button[@class='comeback']")
     private WebElement comeBackButton;
 
+    @FindBy(xpath = "//div[@class='shopping-cart__mobile-click']")
+    private WebElement cartField;
+
+    @FindBy(xpath = "//*[contains(@class, 'v-icon sprite-shared remove v-icon v-icon__close')]")
+    private WebElement removeFromCartField;
+
+    @FindBy(xpath = "//div[@class='cart-popup__content']//a[contains(@href,'https://allo.ua/')]")
+    private WebElement backToSiteFromCart;
+
+
+
+
     public SearchPage(WebDriver driver) { super(driver); }
 
     public List<WebElement> getSearchResultList(){ return searchResult;}
@@ -39,6 +48,12 @@ public class SearchPage extends BasePage{
 
     public WebElement getComeBackButton() { return comeBackButton;}
 
+    public WebElement getBackToSiteFromCart() { return backToSiteFromCart;}
+
+    public WebElement getRemoveFromCartField() { return removeFromCartField;}
+
+    public WebElement getCartField() { return cartField;}
+
     public void clickBuyButton() {
         buyButton.click();
     }
@@ -47,10 +62,19 @@ public class SearchPage extends BasePage{
         return addToCartPopupHeader.isDisplayed();
     }
 
-    public void clickComeBackButton() {
-        comeBackButton.click();}
+    public void clickComeBackButton() { comeBackButton.click();}
 
     public String getTextFromCartsCount(){return countOfCart.getText();}
+
+
+    public void clickOnCartField(){WebElement element = cartField;
+        ((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);}
+
+    public void clickOnRemoveFromCartField() { removeFromCartField.click();}
+
+    public void clickOnBackToSiteFromCart() { backToSiteFromCart.click();}
+
+
 
 
 
